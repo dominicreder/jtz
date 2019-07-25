@@ -1,0 +1,19 @@
+{
+  "name": "jtz",
+  "version": "1.0.0",
+  "description": "Biker",
+  "main": "index.js",
+  "scripts": {
+    "test": "print('Hello')"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://www.github.com/dominicreder/jtz"
+  },
+  "author": "Dominic Reder",
+  "license": "ISC",
+  "dependencies": {
+    "blynk-library": "^0.5.4",
+    "onoff": "^4.1.3"
+  }
+}

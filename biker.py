@@ -23,13 +23,13 @@
 import time
 import datetime
 import RPi.GPIO as GPIO
-import BlynkLib
+import blynklib
 import thread
-global blynk
 
-BLYNK_AUTH = 'd9a771bfbfbf41a7b96bc6506b7dfc8a'
 
-blynk = BlynkLib.Blynk(BLYNK_AUTH)
+BLYNK_AUTH = 'dd1548f71daa4e81ad4e3238069b2f62'
+
+blynk = blynklib.Blynk(BLYNK_AUTH)
 
 
 def BlynkLoop():
@@ -38,22 +38,16 @@ def BlynkLoop():
     blynk.run()
 
 pin = 17
-trigger = []
 
 def sensorCallback(channel):
+  global sensorCounter
+  global sensorStatus
+  sensorStatus = True
   # Called if sensor output changes
   timestamp = time.time()
   stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S:%f')
-  if GPIO.input(channel):
-    trigger.append(1)
-    # No magnet
-    print(str(len(trigger)) + " Umdrehung(en) " + stamp)
-  else:
-    # Magnet
-    pass
-    #print("Sensor LOW " + stamp)
-  return trigger
-
+  sensorCounter += 1
+  print "Sensor LOW " + stamp
 
 
 def main():
@@ -65,16 +59,20 @@ def main():
 
   # This statement puts Blynk into a thread of its own 
   thread.start_new_thread(BlynkLoop,() )
-    
-  # Get initial reading
-  sensorCallback(pin)
 
   try:
+    global sensorCounter
+    global sensorStatus
+    sensorStatus = True
+    sensorCounter = 0
     # Loop until users quits with CTRL-C
-    value=0
+
     while True :
-      time.sleep(0.1)
-      blynk.virtual_write(2, (str(len(trigger))))
+      if sensorStatus == True:
+        print "Sensor Counter " , sensorCounter
+        sensorStatus = False
+      time.sleep(0.05)
+      blynk.virtual_write(2, sensorCounter)
       
 
   except KeyboardInterrupt:
