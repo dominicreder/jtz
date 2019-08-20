@@ -25,6 +25,7 @@ import datetime
 import RPi.GPIO as GPIO
 import blynklib
 import thread
+from blynkapi import Blynk
 
 
 BLYNK_AUTH = 'dd1548f71daa4e81ad4e3238069b2f62'
@@ -36,18 +37,26 @@ def BlynkLoop():
     global blynk
     print("Blynk thread Started") 
     blynk.run()
+    checkResetCounterButton()
 
 pin = 17
 
 def sensorCallback(channel):
   global sensorCounter
+  global ResetButtonState
   global sensorStatus
   sensorStatus = True
   # Called if sensor output changes
   timestamp = time.time()
   stamp = datetime.datetime.fromtimestamp(timestamp).strftime('%H:%M:%S:%f')
   sensorCounter += 1
-  print "Sensor LOW " + stamp
+  print "Sensor was triggered " + stamp
+  
+def checkResetCounterButton():
+  ResetButtonState = Blynk(BLYNK_AUTH, pin = "V0")
+  result = ResetButtonState.get_val()
+  if  result[0] == "1":
+    return True
 
 
 def main():
@@ -69,15 +78,22 @@ def main():
 
     while True :
       if sensorStatus == True:
+
+        if checkResetCounterButton() == True:
+	  sensorCounter = 0
         print "Sensor Counter " , sensorCounter
         sensorStatus = False
-      time.sleep(0.05)
+
       blynk.virtual_write(2, sensorCounter)
-      
+      time.sleep(0.05)
 
   except KeyboardInterrupt:
     # Reset GPIO settings
     GPIO.cleanup()
+ 
+  finally:
+     sensorCounter = 0
+     blynk.virtual_write(2, sensorCounter)
 
 # Tell GPIO library to use GPIO references
 GPIO.setmode(GPIO.BCM)
@@ -86,7 +102,8 @@ GPIO.setmode(GPIO.BCM)
 # Set Switch GPIO as input
 # Pull high by default
 GPIO.setup(pin , GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.add_event_detect(pin, GPIO.BOTH, callback=sensorCallback, bouncetime=100)
+GPIO.add_event_detect(pin, GPIO.BOTH, callback=sensorCallback, bouncetime=200)
+
 
 if __name__=="__main__":
    main()
