@@ -11,3 +11,4 @@ Commit to GitHub
 * git add .
 * git commit -m "here comes my message"
 * git remote add https://github.com/dominicreder/jtz.git
+* git push
