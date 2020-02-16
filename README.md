@@ -12,3 +12,13 @@ Commit to GitHub
 * git commit -m "here comes my message"
 * git remote add https://github.com/dominicreder/jtz.git
 * git push
+
+
+/etc/rc.local
+
+#!/bin/sh -e
+...
+
+. /home/pi/Projekte/jtz/start.sh
+
+exit 0
