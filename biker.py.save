@@ -27,7 +27,8 @@ import blynklib
 import thread
 from blynkapi import Blynk
 
-BLYNK_AUTH = 'QlvbwgyTZXh74m8dz5E6MUNAFpFKmQ3W'
+
+BLYNK_AUTH = 'dd1548f71daa4e81ad4e3238069b2f62'
 
 blynk = blynklib.Blynk(BLYNK_AUTH)
 
@@ -54,7 +55,6 @@ def sensorCallback(channel):
 def checkResetCounterButton():
   ResetButtonState = Blynk(BLYNK_AUTH, pin = "V0")
   result = ResetButtonState.get_val()
-  print "ButtonState = ", result
   if  result[0] == "1":
     return True
 
@@ -85,7 +85,7 @@ def main():
         sensorStatus = False
 
       blynk.virtual_write(2, sensorCounter)
-      time.sleep(0.05)
+      time.sleep(0.1)
 
   except KeyboardInterrupt:
     # Reset GPIO settings
@@ -93,7 +93,7 @@ def main():
  
   finally:
      sensorCounter = 0
-     blynk.virtual_write(2, sensorCounter)
+     blynk.virtual_write(1, sensorCounter)
 
 # Tell GPIO library to use GPIO references
 GPIO.setmode(GPIO.BCM)

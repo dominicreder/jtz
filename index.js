@@ -1,6 +1,6 @@
 var Blynk = require('blynk-library');
 
-var AUTH = 'dd1548f71daa4e81ad4e3238069b2f62';
+var AUTH = 'QlvbwgyTZXh74m8dz5E6MUNAFpFKmQ3W';
 
 var blynk = new Blynk.Blynk(AUTH);
 
